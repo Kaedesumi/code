@@ -13,6 +13,5 @@ int main(void)
     strcpy(zzm.name,"shuaige");
     zzm.number = 123456;
     printf("%s %i",zzm.name,zzm.number);
-    printf("hello\n");
     return 0;
 }
