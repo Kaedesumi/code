@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug active C file",
+      "type": "cppdbg",
+      "request": "launch",
+      "preLaunchTask": "build active c file (gcc)",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+      "cwd": "${fileDirname}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb.exe",
+      "externalConsole": true
+    }
+  ]
+}
