@@ -1,37 +1,42 @@
 #include <stdlib.h>
 
 //hash node
-typedef struct Node{
-    int key;//the number
-    int value;//index
-    struct Node* next;//prevent conflict
+typedef struct Node
+{
+    int key;
+    int value;
+    struct Node* next;
 } Node;
 
 //hash function
 int hash(int key, int size){
-    int h = key % size;
-    return h < 0 ? h + size : h;//no negative
+    int h = key%size;
+    return h < 0 ? h + size : h;
 }
 
 
-int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
-    //tablesize
-    int tablesize = numsSize * 2;
-    //create an array
-    Node** table = (Node**)calloc(tablesize, sizeof(Node*));
+int* twoSum(int* nums, int numsSize, int target, int* returnSize){
 
-    //traverse whole nums
+    int tableSize = numsSize * 2;
+    //create hash map
+    Node** table = (Node**)calloc(tableSize, sizeof(Node*));
+
     for (int i = 0; i < numsSize; i++)
     {
-        //need
         int need = target - nums[i];
-        int h = hash(need, tablesize);//compute the bucket index for 
+        int h = hash(need, tableSize);
 
-        //在哈希表中查找need
+        /*search need in hash table*/
         Node* cur = table[h];
+        while (cur)
+        {
+            if (cur->key == need)
+            {
+                int*
+            }
+            
+        }
+        
     }
     
-
 }
-
-
