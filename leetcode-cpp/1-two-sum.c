@@ -32,11 +32,22 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize){
         {
             if (cur->key == need)
             {
-                int*
+                int* result = (int*)malloc(sizeof(int) + 2);
+                result[0] = cur->value;
+                result[1] = i;
+                *returnSize = 2;
+                return result;
             }
-            
+            cur = cur->next;
         }
-        
+        /* 没找到，则把当前数加入哈希表 */
+        int h2 = hash(nums[i], tableSize);
+        Node* node = (Node*)malloc(sizeof(Node));
+        node->key = nums[i];   // 数值
+        node->value = i;       // 下标
+        node->next = table[h2];
+        table[h2] = node;
     }
-    
+    *returnSize = 0;
+    return NULL;
 }
