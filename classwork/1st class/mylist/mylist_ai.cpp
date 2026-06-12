@@ -2,120 +2,114 @@
 #include <iostream>
 using namespace std;
 
-MyList::MyList()
-{
+// 构造函数
+MyList::MyList() {
     head = nullptr;
     list_size = 0;
 }
 
-MyList::~MyList()
-{
+// 析构函数
+MyList::~MyList() {
     clear();
 }
 
-MyList::Node* MyList::getNodeAt(int index) const
-{
-    if (index < 0 || index >= list_size)
-    {
-        return nullptr;
-    }
-
-    Node* cur = head;
-    for (int i = 0; i < index; i++)
-    {
-        cur = cur->next;
-    }
-
-    return cur;
-}
-
-void MyList::insert(int index, int value)
-{
-    if (index < 0 || index > list_size)
-    {
+// 在指定位置插入
+void MyList::insert(int index, int value) {
+    if (index < 0 || index > len) {
         cout << -1 << endl;
         return;
     }
 
+    // 创建新节点
     Node* newNode = new Node(value);
 
-    if (index == 0)
-    {
+    // 插到头部
+    if (index == 0) {
         newNode->next = head;
         head = newNode;
-    }
-    else
-    {
-        Node* pre = getNodeAt(index - 1);
-        newNode->next = pre->next;
-        pre->next = newNode;
+        len++;
+        return;
     }
 
-    list_size++;
+    // 找到 index-1 位置
+    Node* prev = head;
+    for (int i = 0; i < index - 1; i++) {
+        prev = prev->next;
+    }
+
+    newNode->next = prev->next;
+    prev->next = newNode;
+    len++;
 }
 
-void MyList::remove(int index)
-{
-    if (index < 0 || index >= list_size)
-    {
+// 删除指定位置元素
+void MyList::remove(int index) {
+    if (index < 0 || index >= len) {
         cout << -1 << endl;
         return;
     }
 
     Node* del;
 
-    if (index == 0)
-    {
-        del = head;
+    // 删除头结点
+    if (index == 0) {
+        toDelete = head;
         head = head->next;
-    }
-    else
-    {
-        Node* pre = getNodeAt(index - 1);
-        del = pre->next;
-        pre->next = del->next;
+        delete toDelete;
+        len--;
+        return;
     }
 
-    delete del;
-    list_size--;
+    // 找到 index-1
+    Node* prev = head;
+    for (int i = 0; i < index - 1; i++) {
+        prev = prev->next;
+    }
+
+    toDelete = prev->next;
+    prev->next = toDelete->next;
+    delete toDelete;
+    len--;
 }
 
-int MyList::get(int index) const
-{
-    Node* node = getNodeAt(index);
-
-    if (node == nullptr)
-    {
+// 获取指定位置元素
+int MyList::get(int index) const {
+    if (index < 0 || index >= len) {
         return -1;
     }
 
-    return node->value;
+    Node* cur = head;
+    for (int i = 0; i < index; i++) {
+        cur = cur->next;
+    }
+
+    return cur->data;
 }
 
-void MyList::set(int index, int value)
-{
-    Node* node = getNodeAt(index);
-
-    if (node == nullptr)
-    {
+// 设置指定位置元素
+void MyList::set(int index, int value) {
+    if (index < 0 || index >= len) {
         cout << -1 << endl;
         return;
     }
 
-    node->value = value;
-}
-
-int MyList::size() const
-{
-    return list_size;
-}
-
-void MyList::clear()
-{
     Node* cur = head;
+    for (int i = 0; i < index; i++) {
+        cur = cur->next;
+    }
 
-    while (cur != nullptr)
-    {
+    cur->data = value;
+}
+
+// 返回大小
+int MyList::size() const {
+    return len;
+}
+
+// 清空链表
+void MyList::clear() {
+    Node* cur = head;
+    while (cur != nullptr) {
         Node* temp = cur;
         cur = cur->next;
         delete temp;
@@ -125,66 +119,63 @@ void MyList::clear()
     list_size = 0;
 }
 
-int MyList::sum_from(int index, int k) const
-{
-    if (index < 0 || k < 0 || index + k > list_size)
-    {
+// 从 index 开始前 k 个元素求和
+int MyList::sum_from(int index, int k) const {
+    if (index < 0 || index >= len || k <= 0 || index + k > len) {
         return -1;
     }
 
-    int sum = 0;
-    Node* cur = getNodeAt(index);
+    Node* cur = head;
+    for (int i = 0; i < index; i++) {
+        cur = cur->next;
+    }
 
-    for (int i = 0; i < k; i++)
-    {
-        sum += cur->value;
+    int sum = 0;
+    for (int i = 0; i < k; i++) {
+        sum += cur->data;
         cur = cur->next;
     }
 
     return sum;
 }
 
-void MyList::reverse()
-{
+// 反转链表
+void MyList::reverse() {
     Node* prev = nullptr;
     Node* cur = head;
 
-    while (cur != nullptr)
-    {
+    while (cur != nullptr) {
         Node* nextNode = cur->next;
         cur->next = prev;
         prev = cur;
         cur = nextNode;
     }
 
-    head = prev;
+    head = prev; // 新头
 }
 
-void MyList::merge(MyList& other)
-{
-    if (other.head == nullptr)
-    {
+// 合并 other 到当前链表尾部
+void MyList::merge(MyList& other) {
+    // other 空，直接返回
+    if (other.head == nullptr) {
         return;
     }
 
-    if (head == nullptr)
-    {
+    // 当前链表空
+    if (head == nullptr) {
         head = other.head;
-    }
-    else
-    {
+        len = other.len;
+    } else {
         Node* tail = head;
 
         while (tail->next != nullptr)
         {
             tail = tail->next;
         }
-
         tail->next = other.head;
     }
 
-    list_size += other.list_size;
-
+    // 转移所有权后清空 other
     other.head = nullptr;
     other.list_size = 0;
 }
