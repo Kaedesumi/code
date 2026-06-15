@@ -1,10 +1,23 @@
 // BooleanString.cpp
-#include "BooleanString.h"
 #include <cstring>
+#include "BooleanString.h"
 
+BooleanString::BooleanString(){
+    len = 0;
+    str_p = new char[1];
+    str_p[0] = '\0';
+};
+
+BooleanString::BooleanString(const BooleanString &s){
+    len = s.len;
+
+    str_p = new char[len + 1];
+
+    strcpy(str_p, s.str_p);
+}
 
 //==================辅助函数================
-static bool isBooleanStr(const char *s)
+bool isBooleanStr(const char *s)
 {
     if (s == nullptr)
     {
@@ -23,73 +36,36 @@ static bool isBooleanStr(const char *s)
 }
 
 
-//==========默认构造函数==========
-BooleanString::BooleanString()
-{
-    len = 0;
-    str_p = new char[1];
-    str_p[0] = '\0';
-}
-
-
-
-
-//==========实现通过字符串构造=============
-BooleanString::BooleanString(const char *s)
-{
-    if (isBooleanStr(s))
-    {
-        len = strlen(s);
-
-        str_p = new char[len + 1];
-
-        strcpy(str_p, s);
-    }
-    else
-    {
-        len = 0;
-
-        str_p = new char[1];
-
-        str_p[0] = '\0';
-    }
-}
-
-
-
-
-//============拷贝构造函数===============
-BooleanString::BooleanString(const BooleanString &s)
-{
-    len = s.len;
-
-    str_p = new char[len + 1];
-
-    strcpy(str_p, s.str_p);
-}
-
-
-
-
-//===========析构函数=============
-BooleanString::~BooleanString()
-{
+BooleanString::~BooleanString(){
     delete[] str_p;
     str_p = nullptr;
-    len = 0;
 }
 
 
-
-
-//=========输出==========
-void BooleanString::print()
-{
+// 输出字符串，最后输出换行符
+void BooleanString::print(){
     cout << str_p << endl;
+};
+
+
+
+
+BooleanString::BooleanString(const char *s){
+    if (!isBooleanStr(s))
+    {
+        len = 0;
+        str_p = new char[1];
+        str_p[0] = '\0';
+        return;
+    }
+    
+    len = strlen(s);
+    str_p = new char[len + 1];
+    strcpy(str_p, s);
 }
 
 
-//==========赋值运算符==========
+
 BooleanString& BooleanString::operator=(const BooleanString &s)
 {
     if (this == &s)
@@ -107,8 +83,6 @@ BooleanString& BooleanString::operator=(const BooleanString &s)
 
     return *this;
 }
-
-
 
 BooleanString& BooleanString::operator=(const char* s)
 {
@@ -130,18 +104,10 @@ BooleanString& BooleanString::operator=(const char* s)
 
 
 
-
-//===============返回下标=========
 char& BooleanString::operator[](int index)
 {
     return str_p[index];
 }
-
-
-
-
-
-
 
 
 
@@ -166,7 +132,7 @@ BooleanString BooleanString::operator+(const BooleanString &A)
 
 
 
-//========比较========
+
 bool BooleanString::operator==(const BooleanString &A)
 {
     return strcmp(str_p, A.str_p) == 0;
@@ -177,15 +143,6 @@ bool BooleanString::operator<(const BooleanString &A)
 {
     return strcmp(str_p, A.str_p) < 0;
 }
-
-
-
-
-
-
-
-
-
 
 //============按位取反================
 BooleanString BooleanString::operator!()
@@ -205,6 +162,8 @@ BooleanString BooleanString::operator!()
 
     return result;
 }
+
+
 
 //=========与=========
 BooleanString BooleanString::operator&(const BooleanString &A)
@@ -233,6 +192,7 @@ BooleanString BooleanString::operator&(const BooleanString &A)
 
 
 
+
 //==============或============
 BooleanString BooleanString::operator|(const BooleanString &A)
 {
@@ -256,9 +216,4 @@ BooleanString BooleanString::operator|(const BooleanString &A)
 
     return result;
 }
-
-
-
-
-
 

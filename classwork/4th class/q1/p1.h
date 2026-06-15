@@ -26,7 +26,7 @@ public:
 class AmphibianCar : public Car, public Boat {
 public:
     AmphibianCar(string name)
-        : Vehicle(name), Car(name), Boat(name) {}
+        : Car(name), Boat(name) {}
 
     void drive() override {
         cout << name << " drive on road or river" << endl;

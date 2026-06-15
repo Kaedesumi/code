@@ -39,4 +39,5 @@ public:
     virtual ~TemperatureBuffer();
 
     // TODO: 完成成员函数
+    void printInfo() const;
 };

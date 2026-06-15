@@ -1,5 +1,5 @@
 #include <iostream>
-using namespace std;
+ using namespace std;
 
 // 窗口基类
 class Window {
@@ -12,7 +12,7 @@ class WindowInScreen: public Window {
     friend class Screen;
     
 
-    int id;
+    int _id;
     WindowInScreen *next;
 
 
@@ -23,7 +23,7 @@ public:
     WindowInScreen(): next(nullptr) {};
 
     WindowInScreen(int id, int x, int y, int w, int h)
-        : id(id), next(nullptr) {
+        : _id(id), next(nullptr) {
         _x = x;
         _y = y;
         _w = w;
@@ -32,7 +32,7 @@ public:
 
     void display() {
         // TODO
-        cout << "(id: " << id
+        cout << "(id: " << _id
         << ", x: " << _x
         << ", y: " << _y
         << ", w: " << _w
@@ -117,7 +117,7 @@ void delWindow(int id) {
     WindowInScreen* prev = nullptr;
     WindowInScreen* cur = root;
 
-    while (cur != nullptr && cur->id != id) {
+    while (cur != nullptr && cur->_id != id) {
         prev = cur;
         cur = cur->next;
     }
@@ -149,13 +149,13 @@ void delWindow(int id) {
     WindowInScreen* p = cur;
 
     while (p->next->next != nullptr) {
-        p->id = p->next->id;
+        p->_id = p->next->_id;
         p = p->next;
     }
 
     WindowInScreen* last = p->next;
 
-    p->id = last->id;
+    p->_id = last->_id;
 
     if (p->_y == last->_y)
         p->_w += last->_w;

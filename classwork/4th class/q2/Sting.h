@@ -16,7 +16,7 @@ public:
   const char* getStr_p() { return str_p; }
 	String();                 
 	String(const char *s);    
-	String(const String &s); 
+	String(String &s); 
  
 	~String();     //注意内存泄漏和野指针问题
     

@@ -2,11 +2,12 @@
 #include <iostream>
 using namespace std;
 
-struct Item {
-    int exp;
-    int coef;
+struct Item{  
+    int exp;  // 指数 
+    int coef; // 系数 
 };
 
+// TODO: 实现 input
 void input(vector<Item>& f) {
     int exp, coef;
 
@@ -15,11 +16,11 @@ void input(vector<Item>& f) {
             break;
         }
 
-        if (coef != 0) {
-            f.push_back({exp, coef});
-        }
+        f.push_back({exp, coef});
     }
 }
+
+// TODO: 实现 output
 
 void output(const vector<Item>& f) {
     if (f.empty()) {
@@ -30,10 +31,6 @@ void output(const vector<Item>& f) {
     bool first = true;
 
     for (const auto& item : f) {
-        if (item.coef == 0) {
-            continue;
-        }
-
         if (!first && item.coef > 0) {
             cout << "+";
         }
@@ -53,25 +50,29 @@ void output(const vector<Item>& f) {
         first = false;
     }
 
-    if (first) {
-        cout << 0;
-    }
-
     cout << endl;
 }
 
-void add(const vector<Item>& f1, const vector<Item>& f2, vector<Item>& f3) {
+// TODO: 实现 add
+
+void add(const vector<Item>& f1,
+         const vector<Item>& f2,
+         vector<Item>& f3) {
+
     int i = 0;
     int j = 0;
 
     while (i < f1.size() && j < f2.size()) {
+
         if (f1[i].exp > f2[j].exp) {
             f3.push_back(f1[i]);
             i++;
-        } else if (f1[i].exp < f2[j].exp) {
+        }
+        else if (f1[i].exp < f2[j].exp) {
             f3.push_back(f2[j]);
             j++;
-        } else {
+        }
+        else {
             int sum = f1[i].coef + f2[j].coef;
 
             if (sum != 0) {
@@ -94,12 +95,20 @@ void add(const vector<Item>& f1, const vector<Item>& f2, vector<Item>& f3) {
     }
 }
 
-void multiply(const vector<Item>& f1, const vector<Item>& f2, vector<Item>& f4) {
+// TODO: 实现 multiply
+
+void multiply(const vector<Item>& f1,
+              const vector<Item>& f2,
+              vector<Item>& f4) {
+
     vector<Item> temp;
 
     for (const auto& a : f1) {
         for (const auto& b : f2) {
-            temp.push_back({a.exp + b.exp, a.coef * b.coef});
+            temp.push_back({
+                a.exp + b.exp,
+                a.coef * b.coef
+            });
         }
     }
 
@@ -127,16 +136,11 @@ void multiply(const vector<Item>& f1, const vector<Item>& f2, vector<Item>& f4) 
 }
 
 int main() {
-    vector<Item> f1, f2, f3, f4;
-
-    input(f1);
-    input(f2);
-
-    add(f1, f2, f3);
-    multiply(f1, f2, f4);
-
-    output(f3);
+    vector <Item> f1,f2,f3,f4; // 4 个多项式 
+    input(f1);  // 建立多项式 f1：按多项式的每一项，分别输入指数和系数，指数为负数结束  
+    input(f2); 
+    add(f1,f2,f3);  // 实现：f3=f1+f2  
+    multiply(f1,f2,f4);   // 实现：f4=f1*f2 
+    output(f3);  // 显示多项式 f3，如：2x^4+2x^3+4x^2+3x+10 
     output(f4);
-
-    return 0;
 }
