@@ -2,6 +2,10 @@
 #include <iostream>
 using namespace std;
 
+
+
+
+
 static void SegFault() {
     /*
         输出非法访问提示
@@ -9,10 +13,19 @@ static void SegFault() {
     cout << "Segmentation Fault!" << endl;
 }
 
+
+
+
+
+
+
+
+
+
 static MM_Struct* Tail(MM_Struct* head) {
     /*
-        从 head 开始向后走
-        找到链表最后一个节点
+        从 head 一直走到链表末尾
+        返回最后一个节点
     */
     while (head != nullptr && head->nxt != nullptr) {
         head = head->nxt;
@@ -20,15 +33,15 @@ static MM_Struct* Tail(MM_Struct* head) {
     return head;
 }
 
-static void AddUnit(MM_Struct*& head, size_t cnt) {
-    /*
-        在链表尾部追加 cnt 个 4 字节单元
 
-        每个新节点直接用 new MM_Struct()
-        自动调用题目给的 MM_Struct 构造函数
+
+
+static void AddUnit(MM_Struct*& head, size_t cnt){
+    /*
+        在链表尾部追加 cnt 个空闲单元
+        用于构造堆区或扩容
     */
     MM_Struct* tail = Tail(head);
-
     for (size_t i = 0; i < cnt; i++) {
         MM_Struct* p = new MM_Struct();
 
@@ -41,7 +54,6 @@ static void AddUnit(MM_Struct*& head, size_t cnt) {
         tail = p;
     }
 }
-
 static bool Find(MM_Struct* head, MM_Struct* p, MM_Struct*& pre) {
     /*
         在堆链表中查找 p
@@ -61,26 +73,30 @@ static bool Find(MM_Struct* head, MM_Struct* p, MM_Struct*& pre) {
     return head != nullptr;
 }
 
-Heap::Heap(size_t _size) {
+
+
+
+Heap::Heap(size_t _size){
+    //TODO
     /*
-        保存堆区总大小
-
-        每 4 字节创建一个 MM_Struct 节点
-
-        节点初始化交给 MM_Struct 构造函数
+    按照大小创建MMSstruct链表
+    并给每个阶段赋值初始化
     */
-    size = _size;
     head = nullptr;
-
+    size = _size;
     AddUnit(head, size / 4);
 }
 
+
+
+
+
+
+
+
+
 Heap::~Heap() {
-    /*
-        从 head 开始
-        逐个 delete 节点
-        释放整条链表
-    */
+    //TODO
     while (head != nullptr) {
         MM_Struct* p = head;
         head = head->nxt;
@@ -88,7 +104,14 @@ Heap::~Heap() {
     }
 }
 
-MM_Struct* Heap::Malloc(size_t x) {
+
+
+
+
+
+
+MM_Struct *Heap::Malloc(size_t size) {
+    //TODO
     /*
         需要 x / 4 个连续空闲节点
 
@@ -104,8 +127,7 @@ MM_Struct* Heap::Malloc(size_t x) {
             链表尾部追加 oldSize / 4 个节点
             重新查找
     */
-    size_t need = x / 4;
-
+    size_t need = size / 4;
     while (true) {
         MM_Struct* cur = head;
 
@@ -129,7 +151,7 @@ MM_Struct* Heap::Malloc(size_t x) {
                 for (size_t i = 0; i < need; i++) {
                     cur->locked = true;
                     cur->val = 0;
-                    cur->size = (i == 0 ? x : 0);
+                    cur->size = (i == 0 ? size : 0);
                     cur = cur->nxt;
                 }
 
@@ -137,13 +159,27 @@ MM_Struct* Heap::Malloc(size_t x) {
             }
         }
 
-        size_t oldSize = size;
-        size *= 2;
+        size_t oldSize = this->size;
+        this->size *= 2;
         AddUnit(head, oldSize / 4);
     }
+
 }
 
-void Heap::Free(MM_Struct* p) {
+
+
+
+
+
+
+
+
+
+
+
+
+void Heap::Free(MM_Struct *p) {
+    //TODO
     /*
         p 为空：
             Segmentation Fault
@@ -168,26 +204,26 @@ void Heap::Free(MM_Struct* p) {
     }
 
     MM_Struct* pre = nullptr;
-
     if (!Find(head, p, pre) || !p->locked) {
         SegFault();
         return;
     }
 
-    if (p->size == 0) {
+
+        if (p->size == 0) {
         cout << "Error Free!" << endl;
         return;
     }
 
-    size_t cnt = p->size / 4;
 
+
+
+    size_t cnt = p->size / 4;
     MM_Struct* last = p;
     for (size_t i = 1; i < cnt; i++) {
         last = last->nxt;
     }
-
     MM_Struct* after = last->nxt;
-
     MM_Struct* cur = p;
     for (size_t i = 0; i < cnt; i++) {
         cur->locked = false;
@@ -195,11 +231,9 @@ void Heap::Free(MM_Struct* p) {
         cur->val = 0;
         cur = cur->nxt;
     }
-
     if (after == nullptr) {
         return;
     }
-
     if (pre == nullptr) {
         head = after;
     } else {
@@ -210,7 +244,18 @@ void Heap::Free(MM_Struct* p) {
     last->nxt = nullptr;
 }
 
-void Heap::output(MM_Struct* p) {
+
+
+
+
+
+
+
+
+
+
+
+void Heap::output(MM_Struct *p) {
     /*
         p 为空：
             Segmentation Fault
@@ -247,9 +292,10 @@ void Heap::output(MM_Struct* p) {
     }
 
     cout << endl;
-}
 
-void Heap::setval(MM_Struct* p, int x) {
+}
+void Heap::setval(MM_Struct *p, int x) {
+    //TODO
     /*
         p 为空：
             Segmentation Fault
@@ -264,7 +310,6 @@ void Heap::setval(MM_Struct* p, int x) {
             修改 p->val
     */
     MM_Struct* pre = nullptr;
-
     if (p == nullptr || !Find(head, p, pre) || !p->locked) {
         SegFault();
         return;
